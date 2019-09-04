@@ -1,34 +1,35 @@
-export function itemsFetchDataSuccess(items, nested) {
-    return !nested
-        ? {
-              type: 'ITEMS_FETCH_DATA_SUCCESS',
-              items,
-              pending: false,
-          }
-        : {
-              type: 'NESTED_ITEMS_FETCH_DATA_SUCCESS',
-              items,
-              pending: false,
-          };
-}
-
-export function itemsFetchDataPending(nested = false) {
+export function itemsFetchDataSuccess(items, id) {
     return {
-        type: nested ? 'NESTED_ITEMS_FETCH_DATA_PENDING' : 'ITEMS_FETCH_DATA_PENDING',
-        pending: true,
-    };
-}
-
-export function itemsFetchDataError(error, nested = false) {
-    return {
-        type: nested ? 'NESTED_ITEMS_FETCH_DATA_ERROR' : 'ITEMS_FETCH_DATA_ERROR',
+        type: 'ITEMS_FETCH_DATA_SUCCESS',
+        id,
         pending: false,
+        items,
+        error: '',
     };
 }
 
-export function itemsFetchData(url, nested = false) {
+export function itemsFetchDataPending(id) {
+    return {
+        type: 'ITEMS_FETCH_DATA_PENDING',
+        id,
+        pending: true,
+        items: [],
+        error: '',
+    };
+}
+
+export function itemsFetchDataError(error, id) {
+    return {
+        type: 'ITEMS_FETCH_DATA_ERROR',
+        id,
+        pending: false,
+        error,
+    };
+}
+
+export function itemsFetchData(url, id) {
     return dispatch => {
-        dispatch(itemsFetchDataPending(nested));
+        dispatch(itemsFetchDataPending(id));
         fetch(url)
             .then(response => {
                 if (!response.ok) {
@@ -38,7 +39,7 @@ export function itemsFetchData(url, nested = false) {
                 return response;
             })
             .then(response => response.json())
-            .then(items => dispatch(itemsFetchDataSuccess(items, nested)))
-            .catch(error => dispatch(itemsFetchDataError(error, nested)));
+            .then(items => dispatch(itemsFetchDataSuccess(items, id)))
+            .catch(error => dispatch(itemsFetchDataError(error, id)));
     };
 }

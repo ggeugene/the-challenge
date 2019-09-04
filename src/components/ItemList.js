@@ -10,7 +10,6 @@ class ItemList extends Component {
     }
 
     renderList(items) {
-        console.log(items);
         const listItems = items
             ? items.map(item => {
                   let subList;
@@ -29,36 +28,36 @@ class ItemList extends Component {
     }
 
     componentDidMount() {
-        const { url, nested } = this.props;
-
-        this.props.fetchData(url, nested);
+        const { url, listId } = this.props;
+        this.props.fetchData(url, listId);
     }
 
     render() {
-        // console.log(this.props.items);
-        const { nested, items } = this.props;
+        const { items, listId } = this.props;
+        const list = items.items[listId] ? items.items[listId] : undefined;
 
-        if (nested) {
-            console.log(this.props.items);
+        if (list) {
+            return list.pending ? (
+                <div>loading...</div>
+            ) : list.error ? (
+                <div>{list.error.toString()}</div>
+            ) : (
+                this.renderList(list.items)
+            );
         }
-
-        return !nested ? (
-            <ul>{items ? items.map(item => <li key={item.id}>{item.label}</li>) : null}</ul>
-        ) : (
-            this.renderList(this.props.items)
-        );
+        return this.renderList(null);
     }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = state => {
     return {
-        items: ownProps.nested ? state.nestedItems.items : state.items.items,
+        items: state,
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        fetchData: (url, nested) => dispatch(itemsFetchData(url, nested)),
+        fetchData: (url, id) => dispatch(itemsFetchData(url, id)),
     };
 };
 
