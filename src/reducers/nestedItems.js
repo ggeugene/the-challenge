@@ -1,23 +1,22 @@
 const initialState = {
     items: [],
     pending: false,
-    error: '',
 };
-export function items(state = initialState, action) {
+export function nestedItems(state = initialState, action) {
     switch (action.type) {
-        case 'ITEMS_FETCH_DATA_SUCCESS':
+        case 'NESTED_ITEMS_FETCH_DATA_SUCCESS':
             return {
                 ...state,
                 items: action.items,
                 pending: action.pending,
             };
-        case 'ITEMS_FETCH_DATA_PENDING':
+        case 'NESTED_ITEMS_FETCH_DATA_PENDING':
             return {
                 ...state,
                 items: action.items,
                 pending: action.pending,
             };
-        case 'ITEMS_FETCH_DATA_ERROR':
+        case 'NESTED_ITEMS_FETCH_DATA_ERROR':
             return {
                 ...state,
                 items: action.items,
